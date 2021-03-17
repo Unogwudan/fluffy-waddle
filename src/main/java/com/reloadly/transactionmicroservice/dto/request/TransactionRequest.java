@@ -1,40 +1,23 @@
 package com.reloadly.transactionmicroservice.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.reloadly.transactionmicroservice.enums.SubscriptionDuration;
+import com.reloadly.transactionmicroservice.enums.SubscriptionType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Column;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import java.math.BigDecimal;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionRequest {
-
-    @NotNull(message = "First Name Cannot be null")
-    private String firstName;
-
-    @NotNull(message = "Surname Cannot be null")
-    private String surname;
-
-    private String otherName;
-
-    @Email
     @NotNull
-    private String email;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private BigDecimal amount;
     @NotNull
-    @Column(length = 100)
-    private String password;
-
-    @Pattern(regexp = "(\\+)?[0-9]{6,20}$", message = "Phone number must be between 6 and 20 digits")
-    private String phoneNumber;
-
+    private SubscriptionType type;
+    @NotNull
+    private SubscriptionDuration duration;
 }
