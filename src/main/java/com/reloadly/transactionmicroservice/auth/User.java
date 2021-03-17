@@ -2,41 +2,47 @@ package com.reloadly.transactionmicroservice.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.reloadly.accountmicroservice.enums.Role;
+import com.reloadly.transactionmicroservice.enums.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
+@Getter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
 
     private String username;
+
     private String password;
 
-    @Getter
-    @Setter
+    private String firstName;
+
+    private String surname;
+
+    private String phoneNumber;
+
     private Boolean enabled;
 
-    @Getter
-    @Setter
     private List<Role> roles;
 
     public User(String username) {
         this.username = username;
     }
 
-    public User(String username, String password, List<Role> roles) {
+    public User(String username, String password, List<Role> roles, String firstName, String surname, String phone) {
         this.username = username;
         this.password = password;
         this.roles = roles;
+        this.firstName = firstName;
+        this.surname = surname;
+        this.phoneNumber = phone;
     }
 
     @Override
