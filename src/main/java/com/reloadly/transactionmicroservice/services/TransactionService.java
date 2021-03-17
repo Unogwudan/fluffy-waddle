@@ -1,10 +1,10 @@
 package com.reloadly.transactionmicroservice.services;
 
-import com.reloadly.transactionmicroservice.helpers.Helper;
 import com.reloadly.transactionmicroservice.dto.request.TransactionRequest;
 import com.reloadly.transactionmicroservice.dto.response.TransactionMicroServiceResponse;
 import com.reloadly.transactionmicroservice.enums.SubscriptionStatus;
 import com.reloadly.transactionmicroservice.enums.TransactionStatus;
+import com.reloadly.transactionmicroservice.helpers.Helper;
 import com.reloadly.transactionmicroservice.models.Subscription;
 import com.reloadly.transactionmicroservice.models.Transaction;
 import com.reloadly.transactionmicroservice.respositories.TransactionRepository;
@@ -12,7 +12,6 @@ import com.reloadly.transactionmicroservice.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import java.util.Collections;
 import java.util.List;
@@ -42,30 +41,29 @@ public class TransactionService {
             return Mono.just(Helper.buildResponse(DEBIT_FAILED, request));
         }
         Transaction transaction = buildTransactionRequest(request);
-        Transaction trnx;
 
         try {
-            trnx = transactionRepository.saveAndFlush(transaction);
+            transaction = transactionRepository.saveAndFlush(transaction);
         } catch (Exception e) {
             reverseTransaction(transaction);
             return Mono.just(Helper.buildResponse(INTERNAL_SERVER_ERROR, request));
         }
 
-        Subscription subscription = buildSubscriptionRequest(request, trnx);
+        Subscription subscription = buildSubscriptionRequest(request, transaction);
 
         try {
             subscription = subscriptionService.saveSubscription(subscription);
         } catch (Exception e) {
             transaction.setStatus(TransactionStatus.FAILED);
-            transactionRepository.saveAndFlush(trnx);
-            reverseTransaction(trnx);
+            transactionRepository.saveAndFlush(transaction);
+            reverseTransaction(transaction);
             return Mono.just(Helper.buildResponse(INTERNAL_SERVER_ERROR, request));
         }
 
         if (!Objects.isNull(subscription.getId())) {
             transaction.setValueGiven(Boolean.TRUE);
             transaction.setStatus(TransactionStatus.SUCCESSFUL);
-            transactionRepository.saveAndFlush(trnx);
+            transactionRepository.saveAndFlush(transaction);
         }
 
         return Mono.just(Helper.buildResponse(OK, transaction));
@@ -105,7 +103,6 @@ public class TransactionService {
      * @return @{@link Transaction}
      */
     private Transaction buildTransactionRequest(TransactionRequest request) {
-        log.info("User {}", RequestUtil.getPrincipal());
         return Transaction.builder()
                 .accountId(1l)
                 .amount(request.getAmount())

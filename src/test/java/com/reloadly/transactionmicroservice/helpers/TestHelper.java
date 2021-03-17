@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 import static com.reloadly.transactionmicroservice.enums.ResponseCode.OK;
 
-public class RequestHelper {
+public class TestHelper {
 
     public static String TOKEN = "eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjpbIlJPTEVfVVNFUiJdLCJzdWIiOiJ1bm9nd3VkYW5AZ21haWwuY29tIiwiaWF0IjoxNjE2MDEzMzY2LCJleHAiOjE2MzE3OTMzNjZ9.Kk9U0pnPkDv3U54RwbUpREkCCUtutEWwujkL8GkNA7ijEJPSAJW4EnCdvRpszSGTDu8aB-U7RHZxj2VoA5BAFQ";
 
@@ -44,11 +44,13 @@ public class RequestHelper {
     }
 
     public static Subscription getSubscription() {
-        return Subscription.builder()
+        Subscription subscription = Subscription.builder()
                 .referenceNumber(RandomStringUtils.randomNumeric(16))
                 .amount(BigDecimal.TEN)
                 .accountId(1l)
                 .build();
+        subscription.setId(1l);
+        return subscription;
     }
 }
 

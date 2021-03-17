@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Table(name = "subscription")
 public class Subscription extends BaseModel<Subscription> {
+
     @NotNull
     private Long accountId;
 
@@ -38,4 +39,14 @@ public class Subscription extends BaseModel<Subscription> {
 
     @NotNull
     private SubscriptionType type;
+
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
+    public void setId(Long id) {
+        super.setId(id);
+    }
 }

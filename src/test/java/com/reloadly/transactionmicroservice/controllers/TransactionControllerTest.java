@@ -3,7 +3,7 @@ package com.reloadly.transactionmicroservice.controllers;
 import com.reloadly.transactionmicroservice.TransactionMicroServiceApplication;
 import com.reloadly.transactionmicroservice.constants.CommonConstants;
 import com.reloadly.transactionmicroservice.dto.response.TransactionMicroServiceResponse;
-import com.reloadly.transactionmicroservice.helpers.RequestHelper;
+import com.reloadly.transactionmicroservice.helpers.TestHelper;
 import com.reloadly.transactionmicroservice.services.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -42,12 +42,12 @@ public class TransactionControllerTest {
 
     @Test
     public void subscribe() {
-        doReturn(RequestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).processTransaction(any());
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).processTransaction(any());
         webTestClient.post()
                 .uri(CommonConstants.API_VERSION +"transactions")
-                .body(BodyInserters.fromValue(RequestHelper.transactionRequest()))
+                .body(BodyInserters.fromValue(TestHelper.transactionRequest()))
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .header("Authorization", "Bearer "+ RequestHelper.TOKEN)
+                .header("Authorization", "Bearer "+ TestHelper.TOKEN)
                 .exchange()
                 .expectStatus()
                 .isOk()
@@ -57,7 +57,7 @@ public class TransactionControllerTest {
 
     @Test
     public void getTransactions() {
-        doReturn(RequestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findAllTransactions();
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findAllTransactions();
         webTestClient.get()
                 .uri(CommonConstants.API_VERSION +"transactions")
                 .exchange()
@@ -69,7 +69,7 @@ public class TransactionControllerTest {
 
     @Test
     public void getTransactionsByAccountId() {
-        doReturn(RequestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findAllTransactionsByAccountId(anyLong());
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findAllTransactionsByAccountId(anyLong());
         webTestClient.get()
                 .uri(CommonConstants.API_VERSION +"transactions/account?accountId=" + 1)
                 .exchange()
@@ -81,7 +81,7 @@ public class TransactionControllerTest {
 
     @Test
     public void getTransactionById() {
-        doReturn(RequestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findById(anyLong());
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findById(anyLong());
         webTestClient.get()
                 .uri(CommonConstants.API_VERSION +"transactions/"+1)
                 .exchange()
