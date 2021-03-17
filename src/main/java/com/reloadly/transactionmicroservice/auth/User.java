@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class User implements UserDetails {
 
+    private Long id;
+
     private String username;
 
     private String password;

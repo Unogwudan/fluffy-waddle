@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "transaction")
+@Table(name = "subscription")
 public class Subscription extends BaseModel<Subscription> {
     @NotNull
     private Long accountId;

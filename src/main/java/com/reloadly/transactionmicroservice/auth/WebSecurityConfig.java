@@ -33,10 +33,8 @@ public class WebSecurityConfig {
         return http
                 .exceptionHandling()
                 .authenticationEntryPoint((swe, e) -> Mono.fromRunnable(() -> {
-                    log.error("UNAUTHORIZED {}", swe.getResponse());
                     swe.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
                 })).accessDeniedHandler((swe, e) -> Mono.fromRunnable(() -> {
-                    log.error("FORBIDDEN {}", swe.getResponse());
                     swe.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                 })).and()
                 .csrf().disable()
@@ -47,16 +45,7 @@ public class WebSecurityConfig {
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers(HttpMethod.GET).permitAll()
-                .pathMatchers(HttpMethod.POST).permitAll()
-                .pathMatchers(HttpMethod.PUT).permitAll()
-                .pathMatchers("/api/v1/auth/").permitAll()
-                .pathMatchers( "/swagger-ui.html").permitAll()
-                .pathMatchers( "/webjars/**").permitAll()
-                .pathMatchers( "/configuration/security").permitAll()
-                .pathMatchers( "/configuration/ui").permitAll()
-                .pathMatchers( "/swagger-resources/**").permitAll()
-                .pathMatchers( "/swagger-resources").permitAll()
-                .pathMatchers( "/v2/api-docs").permitAll()
+                .pathMatchers( SWAGGER_WHITELIST).permitAll()
                 .anyExchange().authenticated()
                 .and().build();
     }

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+
 @Data
 @Builder
 @Entity
@@ -32,7 +33,6 @@ public class Transaction extends BaseModel<Transaction> {
     private String metaData;
 
     @NotNull
-    @Column(name = "reference_number")
     private String referenceNumber;
 
     @NotNull

@@ -1,5 +1,6 @@
 package com.reloadly.transactionmicroservice.auth;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-
+@Slf4j
 @Component
 public class SecurityContextRepository implements ServerSecurityContextRepository {
 
@@ -21,7 +22,7 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
 
     @Override
     public Mono<Void> save(ServerWebExchange swe, SecurityContext sc) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Mono.empty();
     }
 
     @Override
@@ -32,9 +33,7 @@ public class SecurityContextRepository implements ServerSecurityContextRepositor
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String authToken = authHeader.substring(7);
             Authentication auth = new UsernamePasswordAuthenticationToken(authToken, authToken);
-            return this.authenticationManager.authenticate(auth).map((authentication) -> {
-                return new SecurityContextImpl(authentication);
-            });
+            return this.authenticationManager.authenticate(auth).map((authentication) -> new SecurityContextImpl(authentication));
         } else {
             return Mono.empty();
         }
