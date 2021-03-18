@@ -1,5 +1,6 @@
 package com.reloadly.transactionmicroservice.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.reloadly.transactionmicroservice.enums.SubscriptionDuration;
 import com.reloadly.transactionmicroservice.enums.SubscriptionType;
 import lombok.AllArgsConstructor;
@@ -22,5 +23,6 @@ public class TransactionRequest {
     @NotNull
     private SubscriptionDuration duration;
     @NotNull
+    @JsonProperty(value = "subscriber_email")
     private String subscriberEmail;
 }
