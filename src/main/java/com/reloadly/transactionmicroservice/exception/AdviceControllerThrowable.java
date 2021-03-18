@@ -9,8 +9,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+
 import javax.persistence.PersistenceException;
 import java.net.SocketTimeoutException;
+
 import static com.reloadly.transactionmicroservice.enums.ResponseCode.*;
 
 
@@ -78,7 +80,6 @@ public class AdviceControllerThrowable {
         log.error("AccessDeniedException ", e);
         return new TransactionMicroServiceResponse("401", e.getMessage());
     }
-
 
     @ExceptionHandler(Exception.class)
     public TransactionMicroServiceResponse noAccessException(Exception e) {

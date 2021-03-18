@@ -7,8 +7,8 @@ import com.reloadly.transactionmicroservice.services.TransactionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 import javax.validation.Valid;
 
 @RestController
@@ -30,11 +30,6 @@ public class TransactionController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<TransactionMicroServiceResponse> getTransactions() {
         return transactionService.findAllTransactions();
-    }
-
-    @GetMapping(path = "/account", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Mono<TransactionMicroServiceResponse> getTransactionsByAccountId(@RequestParam Long accountId) {
-        return transactionService.findAllTransactionsByAccountId(accountId);
     }
 
     @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

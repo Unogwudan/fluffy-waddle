@@ -5,6 +5,7 @@ import com.reloadly.transactionmicroservice.dto.request.EmailRequest;
 import com.reloadly.transactionmicroservice.dto.request.TransactionRequest;
 import com.reloadly.transactionmicroservice.dto.response.TransactionMicroServiceResponse;
 import com.reloadly.transactionmicroservice.enums.ResponseCode;
+
 import java.time.LocalDateTime;
 
 public class Helper {
@@ -25,7 +26,7 @@ public class Helper {
                 .replace("{duration}", request.getDuration().name());
 
         return EmailRequest.builder()
-                .to("unogwudan@gmail.com")
+                .to(request.getSubscriberEmail())
                 .subject(CommonConstants.TRANSACTION_COMPLETED_SUBJECT)
                 .message(message)
                 .build();

@@ -14,9 +14,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import static com.reloadly.transactionmicroservice.enums.ResponseCode.*;
 
 @Slf4j
@@ -84,15 +86,6 @@ public class TransactionService {
         }
     }
 
-    public Mono<TransactionMicroServiceResponse> findAllTransactionsByAccountId(Long id) {
-        List<Transaction> transactions = transactionRepository.findTransactionsByAccountId(id);
-        if(transactions.isEmpty()) {
-            return Mono.just(Helper.buildResponse(RECORD_NOT_FOUND, Collections.EMPTY_LIST));
-        } else {
-            return Mono.just(Helper.buildResponse(OK, transactions));
-        }
-    }
-
     public Mono<TransactionMicroServiceResponse> findById(long id) {
         Transaction transaction = transactionRepository.findById(id);
         if(transaction != null) {
@@ -110,7 +103,7 @@ public class TransactionService {
      */
     private Transaction buildTransactionRequest(TransactionRequest request) {
         return Transaction.builder()
-                .accountId(1l)
+                .subscriberEmail(request.getSubscriberEmail())
                 .amount(request.getAmount())
                 .metaData("Purchase of ".concat(request.getType().name()))
                 .referenceNumber(RandomStringUtils.randomNumeric(16))
@@ -125,7 +118,7 @@ public class TransactionService {
      */
     private Subscription buildSubscriptionRequest(TransactionRequest request, Transaction trnx) {
         return Subscription.builder()
-                .accountId(trnx.getAccountId())
+                .subscriberEmail(trnx.getSubscriberEmail())
                 .amount(trnx.getAmount())
                 .referenceNumber(trnx.getReferenceNumber())
                 .status(SubscriptionStatus.ACTIVE)

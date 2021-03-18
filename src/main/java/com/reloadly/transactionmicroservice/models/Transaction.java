@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 @Table(name = "transaction")
 public class Transaction extends BaseModel<Transaction> {
     @NotNull
-    private Long accountId;
+    private String subscriberEmail;
 
     @NotNull
     private BigDecimal amount;

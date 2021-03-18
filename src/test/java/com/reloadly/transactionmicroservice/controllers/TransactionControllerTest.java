@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.BodyInserters;
+
 import static com.reloadly.transactionmicroservice.enums.ResponseCode.OK;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -60,18 +61,6 @@ public class TransactionControllerTest {
         doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findAllTransactions();
         webTestClient.get()
                 .uri(CommonConstants.API_VERSION +"transactions")
-                .exchange()
-                .expectStatus()
-                .isOk()
-                .expectBody(TransactionMicroServiceResponse.class)
-                .value(response -> response.getStatusCode().equals(OK.getCanonicalCode()));
-    }
-
-    @Test
-    public void getTransactionsByAccountId() {
-        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(transactionService).findAllTransactionsByAccountId(anyLong());
-        webTestClient.get()
-                .uri(CommonConstants.API_VERSION +"transactions/account?accountId=" + 1)
                 .exchange()
                 .expectStatus()
                 .isOk()

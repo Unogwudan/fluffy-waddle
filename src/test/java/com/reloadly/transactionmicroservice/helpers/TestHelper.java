@@ -39,7 +39,7 @@ public class TestHelper {
         return Transaction.builder()
                 .referenceNumber(RandomStringUtils.randomNumeric(16))
                 .amount(BigDecimal.TEN)
-                .accountId(1l)
+                .subscriberEmail("abc@xyz.com")
                 .build();
     }
 
@@ -47,7 +47,7 @@ public class TestHelper {
         Subscription subscription = Subscription.builder()
                 .referenceNumber(RandomStringUtils.randomNumeric(16))
                 .amount(BigDecimal.TEN)
-                .accountId(1l)
+                .subscriberEmail("abc@xyz.com")
                 .build();
         subscription.setId(1l);
         return subscription;

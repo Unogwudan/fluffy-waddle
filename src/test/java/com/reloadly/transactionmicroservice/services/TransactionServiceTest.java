@@ -4,13 +4,10 @@ import com.reloadly.transactionmicroservice.dto.response.TransactionMicroService
 import com.reloadly.transactionmicroservice.enums.ResponseCode;
 import com.reloadly.transactionmicroservice.helpers.TestHelper;
 import com.reloadly.transactionmicroservice.models.Subscription;
-import com.reloadly.transactionmicroservice.models.Transaction;
 import com.reloadly.transactionmicroservice.respositories.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -119,17 +116,6 @@ public class TransactionServiceTest {
     }
 
     @Test
-    public void findAllTransactionsByAccountId() {
-        doReturn(Arrays.asList(TestHelper.getTransaction())).when(transactionRepository).findTransactionsByAccountId(anyLong());
-        Mono<TransactionMicroServiceResponse> transaction = transactionService.findAllTransactionsByAccountId(1l);
-        StepVerifier
-                .create(transaction)
-                .expectNextMatches(response -> response.getStatusCode().equals(ResponseCode.OK.getCanonicalCode()))
-                .verifyComplete();
-    }
-
-
-    @Test
     public void findById() {
         doReturn(TestHelper.getTransaction()).when(transactionRepository).findById(anyLong());
         Mono<TransactionMicroServiceResponse> transaction = transactionService.findById(1l);
@@ -143,16 +129,6 @@ public class TransactionServiceTest {
     public void findByIdWithNullResponse() {
         doReturn(null).when(transactionRepository).findById(anyLong());
         Mono<TransactionMicroServiceResponse> transaction = transactionService.findById(1l);
-        StepVerifier
-                .create(transaction)
-                .expectNextMatches(response -> response.getStatusCode().equals(RECORD_NOT_FOUND.getCanonicalCode()))
-                .verifyComplete();
-    }
-
-    @Test
-    public void findAllTransactionsByAccountIdWithEmptyResponse() {
-        doReturn(Collections.EMPTY_LIST).when(transactionRepository).findTransactionsByAccountId(anyLong());
-        Mono<TransactionMicroServiceResponse> transaction = transactionService.findAllTransactionsByAccountId(1l);
         StepVerifier
                 .create(transaction)
                 .expectNextMatches(response -> response.getStatusCode().equals(RECORD_NOT_FOUND.getCanonicalCode()))
