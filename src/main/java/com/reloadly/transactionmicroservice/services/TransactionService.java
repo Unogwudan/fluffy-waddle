@@ -8,11 +8,12 @@ import com.reloadly.transactionmicroservice.helpers.Helper;
 import com.reloadly.transactionmicroservice.models.Subscription;
 import com.reloadly.transactionmicroservice.models.Transaction;
 import com.reloadly.transactionmicroservice.respositories.TransactionRepository;
-import com.reloadly.transactionmicroservice.utils.RequestUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -22,12 +23,16 @@ import static com.reloadly.transactionmicroservice.enums.ResponseCode.*;
 @Service
 public class TransactionService {
 
+    @Value("${notification.service.endpoint}")
+    private String notificationEndpoint;
     private final TransactionRepository transactionRepository;
     private final SubscriptionService subscriptionService;
+    private final WebClientHttpService httpService;
 
-    public TransactionService(TransactionRepository transactionRepository, SubscriptionService subscriptionService) {
+    public TransactionService(TransactionRepository transactionRepository, SubscriptionService subscriptionService, WebClientHttpService httpService) {
         this.transactionRepository = transactionRepository;
         this.subscriptionService = subscriptionService;
+        this.httpService = httpService;
     }
 
     /**
@@ -66,6 +71,8 @@ public class TransactionService {
             transactionRepository.saveAndFlush(transaction);
         }
 
+        httpService.post(notificationEndpoint, Helper.buildEmailRequest(request), TransactionMicroServiceResponse.class)
+                .subscribeOn(Schedulers.elastic()).subscribe(res -> log.info("Email Notification Response {}", res));
         return Mono.just(Helper.buildResponse(OK, transaction));
     }
 

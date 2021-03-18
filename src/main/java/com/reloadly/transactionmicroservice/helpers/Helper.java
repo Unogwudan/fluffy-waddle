@@ -1,5 +1,8 @@
 package com.reloadly.transactionmicroservice.helpers;
 
+import com.reloadly.transactionmicroservice.constants.CommonConstants;
+import com.reloadly.transactionmicroservice.dto.request.EmailRequest;
+import com.reloadly.transactionmicroservice.dto.request.TransactionRequest;
 import com.reloadly.transactionmicroservice.dto.response.TransactionMicroServiceResponse;
 import com.reloadly.transactionmicroservice.enums.ResponseCode;
 import java.time.LocalDateTime;
@@ -12,6 +15,19 @@ public class Helper {
                 .statusMessage(responseCode.getDescription())
                 .timestamp(LocalDateTime.now().toString())
                 .data(data)
+                .build();
+    }
+
+    public static EmailRequest buildEmailRequest(TransactionRequest request) {
+        String message = CommonConstants.TRANSACTION_COMPLETED_MESSAGE
+                .replace("{type}", request.getType().name())
+                .replace("{amount}", request.getAmount().toString())
+                .replace("{duration}", request.getDuration().name());
+
+        return EmailRequest.builder()
+                .to("unogwudan@gmail.com")
+                .subject(CommonConstants.TRANSACTION_COMPLETED_SUBJECT)
+                .message(message)
                 .build();
     }
 }
