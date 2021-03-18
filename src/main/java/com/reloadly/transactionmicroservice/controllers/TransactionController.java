@@ -6,6 +6,7 @@ import com.reloadly.transactionmicroservice.dto.response.TransactionMicroService
 import com.reloadly.transactionmicroservice.services.TransactionService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -21,6 +22,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ResponseEntity<TransactionMicroServiceResponse>> subscribe(@RequestBody @Valid TransactionRequest request) {
         return transactionService.processTransaction(request)

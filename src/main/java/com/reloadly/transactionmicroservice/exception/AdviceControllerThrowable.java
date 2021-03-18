@@ -75,10 +75,10 @@ public class AdviceControllerThrowable {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
     public TransactionMicroServiceResponse noAccessException(AccessDeniedException e) {
         log.error("AccessDeniedException ", e);
-        return new TransactionMicroServiceResponse("401", e.getMessage());
+        return new TransactionMicroServiceResponse("403", e.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
