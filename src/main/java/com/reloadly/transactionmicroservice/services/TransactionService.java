@@ -71,8 +71,7 @@ public class TransactionService {
             transactionRepository.saveAndFlush(transaction);
         }
 
-        httpService.post(notificationEndpoint, Helper.buildEmailRequest(request), TransactionMicroServiceResponse.class)
-                .subscribeOn(Schedulers.elastic()).subscribe(res -> log.info("Email Notification Response {}", res));
+        httpService.post(notificationEndpoint, Helper.buildEmailRequest(request), TransactionMicroServiceResponse.class).subscribeOn(Schedulers.elastic()).subscribe(res -> log.info("Email Notification Response {}", res));
         return Mono.just(Helper.buildResponse(OK, transaction));
     }
 

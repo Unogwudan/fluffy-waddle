@@ -31,7 +31,7 @@ import static org.powermock.api.mockito.PowerMockito.doThrow;
 
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {TransactionService.class})
+@ContextConfiguration(classes = {TransactionService.class, WebClientHttpService.class})
 @EnableConfigurationProperties
 @TestPropertySource("classpath:/test.properties")
 @Slf4j
@@ -46,10 +46,14 @@ public class TransactionServiceTest {
     @MockBean
     private SubscriptionService subscriptionService;
 
+    @MockBean
+    private WebClientHttpService httpService;
+
     @Test
     public void processSuccessfulTransaction() {
         doReturn(TestHelper.getSubscription()).when(subscriptionService).saveSubscription(any());
         doReturn(TestHelper.getTransaction()).when(transactionRepository).saveAndFlush(any());
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(httpService).post(any(), any(), any());
         Mono<TransactionMicroServiceResponse> transaction = transactionService.processTransaction(TestHelper.transactionRequest());
         StepVerifier
                 .create(transaction)
@@ -61,6 +65,7 @@ public class TransactionServiceTest {
     public void processFailedTransaction() {
         doReturn(TestHelper.getSubscription()).when(subscriptionService).saveSubscription(any());
         doThrow(new RuntimeException()).when(transactionRepository).saveAndFlush(any());
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(httpService).post(any(), any(), any());
         Mono<TransactionMicroServiceResponse> transaction = transactionService.processTransaction(TestHelper.transactionRequest());
         StepVerifier
                 .create(transaction)
@@ -72,6 +77,7 @@ public class TransactionServiceTest {
     public void processFailedTransactionWhenSubscriptionFails() {
         doReturn(TestHelper.getTransaction()).when(transactionRepository).saveAndFlush(any());
         doThrow(new RuntimeException()).when(subscriptionService).saveSubscription(any());
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(httpService).post(any(), any(), any());
         Mono<TransactionMicroServiceResponse> transaction = transactionService.processTransaction(TestHelper.transactionRequest());
         StepVerifier
                 .create(transaction)
@@ -83,6 +89,7 @@ public class TransactionServiceTest {
     public void processFailedTransactionWhenSubscriptionIsNull() {
         doReturn(TestHelper.getTransaction()).when(transactionRepository).saveAndFlush(any());
         doReturn(TestHelper.getSubscription()).when(subscriptionService).saveSubscription(any());
+        doReturn(TestHelper.getSuccessfulTransactionMicroServiceResponse()).when(httpService).post(any(), any(), any());
         Mono<TransactionMicroServiceResponse> transaction = transactionService.processTransaction(TestHelper.transactionRequest());
         StepVerifier
                 .create(transaction)
